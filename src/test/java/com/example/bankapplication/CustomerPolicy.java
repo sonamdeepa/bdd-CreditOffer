@@ -3,6 +3,7 @@ package com.example.bankapplication;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.jupiter.api.Assertions;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,26 +39,41 @@ public class CustomerPolicy {
 
   @When("we have a VIP customer")
   public void weHaveAVIPCustomer() {
-    //implement code here
+    deepa = new Customer("Deepa",true);
   }
 
   @Then("you can add him but cannot remove him from an economy credit offer")
   public void youCanAddHimButCannotRemoveHimFromAnEconomyCreditOffer() {
-    //implement code here
+    Assertions.assertAll("Verify all conditions for a VIP customer and an economy credit offer",
+        ()->assertEquals("1",economyCreditOffer.getId()),
+        ()->assertEquals(true,economyCreditOffer.addCustomer(deepa)),
+        ()->assertEquals(1,economyCreditOffer.getCustomersList().size()),
+        ()->assertEquals("Deepa",economyCreditOffer.getCustomersList().get(0).getName()),
+
+        ()->assertEquals(false,economyCreditOffer.removeCustomer(deepa)),
+        ()->assertEquals(1,economyCreditOffer.getCustomersList().size()));
   }
 
   @Given("there is a business credit offer")
   public void thereIsABusinessCreditOffer() {
-    //implement code here
+    businessCreditOffer = new BusinessCreditOffer("2");
   }
 
   @Then("you cannot add or remove him from a business credit offer")
   public void youCannotAddOrRemoveHimFromABusinessCreditOffer() {
-    //implement code here
+    Assertions.assertAll("Verify all conditions for a usual customer and an business credit offer",
+        ()-> assertEquals(false,businessCreditOffer.addCustomer(sonam)),
+        ()->assertEquals(0,businessCreditOffer.getCustomersList().size()),
+        ()->assertEquals(false,businessCreditOffer.removeCustomer(sonam)),
+        ()->assertEquals(0,businessCreditOffer.getCustomersList().size()));
   }
 
   @Then("you can add him but cannot remove him from a business credit offer")
   public void youCanAddHimButCannotRemoveHimFromABusinessCreditOffer() {
-    //implement code here
+    Assertions.assertAll("Verify all conditions for a VIP customer and an business credit offer",
+        ()-> assertEquals(true,businessCreditOffer.addCustomer(deepa)),
+        ()->assertEquals(1,businessCreditOffer.getCustomersList().size()),
+        ()->assertEquals(false,businessCreditOffer.removeCustomer(deepa)),
+        ()->assertEquals(1, businessCreditOffer.getCustomersList().size()));
   }
 }
